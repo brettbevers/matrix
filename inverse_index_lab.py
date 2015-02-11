@@ -3,7 +3,7 @@ coursera = 1
 # Please fill out this stencil and submit using the provided submission script.
 
 
-
+from random import randint
 
 
 ## 1: (Task 1) Movie Review
@@ -13,7 +13,7 @@ def movie_review(name):
     Input: the name of a movie
     Output: a string (one of the review options), selected at random using randint
     """
-    return ...
+    return ["See it!", "A gem!", "Ideological claptrap!"][randint(0,2)]
 
 
 
@@ -32,7 +32,11 @@ def makeInverseIndex(strlist):
     >>> makeInverseIndex(['hello world','hello','hello cat','hellolot of cats']) == {'hello': {0, 1, 2}, 'cat': {2}, 'of': {3}, 'world': {0}, 'cats': {3}, 'hellolot': {3}}
     True
     """
-    pass
+    inverse_index = dict()
+    for index, str in enumerate(strlist):
+        for word in str.split():
+            inverse_index[word] = inverse_index.get(word, set()) | {index}
+    return inverse_index
 
 
 
@@ -49,7 +53,10 @@ def orSearch(inverseIndex, query):
     >>> orSearch(idx, ['Johann', 'Carl'])
     {0, 2, 3, 4, 5}
     """
-    pass
+    document_numbers = set()
+    for word in query:
+        document_numbers |= inverseIndex.get(word, set())
+    return document_numbers
 
 
 
@@ -66,5 +73,7 @@ def andSearch(inverseIndex, query):
     >>> andSearch(idx, ['Johann', 'Bach'])
     {0, 4}
     """
-    pass
-
+    document_numbers = inverseIndex.get(query.pop(), set())
+    for word in query:
+        document_numbers &= inverseIndex.get(word, set())
+    return document_numbers
